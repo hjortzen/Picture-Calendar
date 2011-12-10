@@ -1,0 +1,17 @@
+Project Goals:
+
+- Provide a function that enables a user to add a picture of the day. That is, one picture connected to the days date.
+- Provide a user interface accessible from several devices. Computer, iOS, Android. The user interface in this regard is an administrative end of the UI. I.e. adding new pictures.
+- Provide a presentation view of the data. For instance as a calendar with any photo associated to it - a thumbnail will be included.
+
+Technical:
+- What techniques are to be used? Groovy and Grails? GWT and Vaadin are other interesting options.
+- How should the server interface be designed? A RESTful interface comes to mind. However that might break the niceties with for instance Groovy+Grails.
+- How to ensure a UI usable by mobile devices as well as desktop machines?
+- How should the data model be designed?
+
+Project management:
+- Project planning tool? JIRA? What support exists from github?
+- Traditional SCRUM or just waterfall (since developer commitment will be an issue and sprints of 3-4 weeks are improbable)
+- Issue tracking?
+- Bug tracking?
