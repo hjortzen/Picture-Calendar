@@ -5,9 +5,10 @@ class PhotoEntry {
     String description;
     Date createDate;
     Date targetDate;
-    String userId;
+    String calendarId;
     String originalUrl;
 
     static constraints = {
+        originalUrl(url: true)
     }
 }

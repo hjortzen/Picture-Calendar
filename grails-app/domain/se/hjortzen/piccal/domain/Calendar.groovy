@@ -5,5 +5,7 @@ class Calendar {
     String userId;
 
     static constraints = {
+        id (unique: true)
+        userId(blank: false)
     }
 }
