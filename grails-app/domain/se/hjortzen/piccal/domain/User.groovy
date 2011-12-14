@@ -1,12 +1,12 @@
 package se.hjortzen.piccal.domain
 
 class User {
-    String id;
+    String userId;
     String description;
     String email;
 
     static constraints = {
-        id(blank: false, unique: true)
+        userId(blank: false, unique: true)
         email(email: true)
     }
 }
