@@ -1,9 +1,13 @@
 package se.hjortzen.piccal.domain
 
 class Calendar {
-    String userId;
+    User user;
+    String description;
 
     static constraints = {
-        userId(blank: false)
+        description(blank: false)
+    }
+    String toString() {
+        return description;
     }
 }
