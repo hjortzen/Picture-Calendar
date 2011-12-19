@@ -51,16 +51,32 @@ grails.spring.bean.packages = []
 // request parameters to mask when logging exceptions
 grails.exceptionresolver.params.exclude = ['password']
 
+cas {
+    urlPattern = '/*'
+    disabled = false
+
+    cas.mocking = false
+}
+
 // set per-environment serverURL stem for creating absolute links
 environments {
     production {
         grails.serverURL = "http://www.changeme.com"
+        cas.loginUrl = 'https://cas.user.uu.se/cas/login'
+        cas.validateUrl = 'https://cas.user.uu.se/cas/serviceValidate'
+        cas.serverName = 'localhost:8080'
     }
     development {
         grails.serverURL = "http://localhost:8080/${appName}"
+        cas.loginUrl = 'https://cas-akkatest.its.uu.se/castest/login'
+        cas.validateUrl = 'https://cas-akkatest.its.uu.se/castest/serviceValidate'
+        cas.serverName = 'localhost:8080'
     }
     test {
         grails.serverURL = "http://localhost:8080/${appName}"
+        cas.loginUrl = 'https://cas-akkatest.its.uu.se/castest/login'
+        cas.validateUrl = 'https://cas-akkatest.its.uu.se/castest/serviceValidate'
+        cas.serverName = 'localhost:8080'
     }
 
 }

@@ -22,4 +22,12 @@ class UserTests extends GrailsUnitTestCase {
         emailError = user.errors.getFieldError("email")
         assertNull "No validation errors should have been present at this moment for email", emailError
     }
+
+    void testSave() {
+        def user = new User(description: "A Unit Test User", loginName: "UnitUser", email: "none@nowjhere.com")
+        user.save()
+        def user2 = User.findByLoginName("UnitUser")
+        println(user2)
+        assertNotNull "User wasn't found in the persistence as expected", user2
+    }
 }
