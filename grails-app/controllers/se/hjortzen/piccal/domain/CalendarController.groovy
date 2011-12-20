@@ -14,10 +14,11 @@ class CalendarController {
         if (!cal) {
             render "Calendar not found"
         }
-        if (cal && cal.user.id != session.getAttribute("user").id) {
+        //TODO: Should we really check for ownership here? GET should always be available to public?
+        /*if (cal && cal.user.id != session.getAttribute("user").id) {
             render "Not authorized"
             return;
-        }
+        } */
         def pattern = "yyyy"
         def reqDateStr = params.year;
         if (params.month) {
@@ -39,9 +40,8 @@ class CalendarController {
         } else {
             toDate.set(java.util.Calendar.DAY_OF_YEAR, toDate.getActualMaximum(java.util.Calendar.DAY_OF_YEAR))
         }
-
-        println("Requesting date: " + requestDate)
-        println("To: " + toDate.time)
+        //println("Requesting date: " + requestDate)
+        //println("To: " + toDate.time)
         def photoEntries = PhotoEntry.findAllByTargetDateBetween(requestDate, toDate.time)
         if (photoEntries) {
             render photoEntries as JSON
@@ -54,6 +54,7 @@ class CalendarController {
         if (params.id) {
             def cal = Calendar.get(params.id)
             if (cal) {
+                //TODO: Should we really check for ownership here? GET should always be available to public?
                 if (cal.user.id != session.getAttribute("user").id) {
                     render "Not yours!"
                     return;
