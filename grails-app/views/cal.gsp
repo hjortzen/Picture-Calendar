@@ -8,7 +8,6 @@
         <script type='text/javascript' src='fullcalendar/fullcalendar.js'></script>
         <script type="text/javascript">
             $(document).ready(function() {
-                console.log('JQuery initialized!');
                 $('#calendar').fullCalendar({
                     header: {
                         left: 'prev,next, today',
@@ -20,13 +19,14 @@
                     },
                     firstDay: 1,
                     weekMode: 'variable',
-                    aspectRatio: 2.5,
+                    aspectRatio: 2,
                     loading: function(bool) {
                         if (bool) $('#loading').show();
                         else $('#loading').hide();
                     },
                     events: fetchEvents,
-                    eventRender: customEventRender
+                    eventRender: customEventRender,
+                    eventClick: eventClicked
                 });
 
                 function fetchEvents(start, end, callback) {
@@ -35,12 +35,11 @@
                     var months = monthsBetween(start, end);
                     var events = [];
 
-                    for (var i=0; i<months.length; i++) {
+                    for (var i=1; i<months.length-1; i++) { //TODO: Remove -1
                         var ajaxUrl = baseUrl + "calendar/" + calendarId + '/' + months[i].getFullYear() + "/" + (months[i].getMonth()+1);
-                        console.log('URL should be something like ' + ajaxUrl);
                         //Perform AJAX call
                         function doIt() {
-                            var last = i===(months.length-1);
+                            var last = i===(months.length-1-1); //TODO: Reset to .lenght-1 only
                             $.ajax({
                                 url: ajaxUrl,
                                 dataType: 'json',
@@ -56,9 +55,7 @@
                                             url:        value.originalUrl
                                         });
                                     });
-                                    console.log(events);
                                     if (last) { //If this is the last ajax call then use callback
-                                        console.log('Calling callback!');
                                         callback(events);
                                     }
                                 }
@@ -66,7 +63,6 @@
                         }
                         doIt();
                     }
-                    return true;
                 }
 
                 function monthsBetween(start, end) {
@@ -93,13 +89,18 @@
                 function customEventRender(event, element) {
                     return $( '<div class="photoEntry" />' ).html('<img src=\"' + event.url + '\"></img>');
                 }
+
+                function eventClicked(calEvent, jsEvent, view) {
+                    console.log("TODO: Show hidden floating div with original image URL as base (full size image)\n" + calEvent.url);
+                    return false;
+                }
             });
         </script>
     </head>
     <body>
         <h1>This page is intended for Calendar POC</h1>
         <div id="calendar-content" >
-            <div id="loading">Loading...</div>
+            <span id="loading">Loading...</span>
             <div id="calendar" />
         </div>
     </body>

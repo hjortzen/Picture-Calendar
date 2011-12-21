@@ -1,0 +1,29 @@
+.photoEntry {
+  text-align: center;
+  padding-bottom: 5px;
+}
+
+#calendar-content {
+  width: 800px
+}
+
+#loading {
+  display: none; 
+  position: relative; 
+  top: 250px;
+  left: 360px;
+  text-align: center;
+  
+  padding: 4px;
+  margin: 5px;
+  width: 200px;
+	background: #FFDDDD;
+	height: 38px;
+	border-style:solid;
+	border-width: 1px 1px 1px 1px;
+	border-color: #FF0000;
+	-moz-border-radius: 10px 10px 10px 10px;
+	-webkit-border-radius: 10px 10px 10px 10px;
+	border-radius: 10px 10px 10px 10px;
+
+}
