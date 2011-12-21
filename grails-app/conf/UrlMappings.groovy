@@ -9,6 +9,12 @@ class UrlMappings {
 			}
 		}
 
+        "/REST/entry/$id/content" (controller: "photoEntry", parseRequest: true) {
+            action = [
+                    GET: "getPhotoContent"
+            ]
+        }
+
         "/REST/calendar/$id?" (controller: "calendar", parseRequest: true) {
             action = [
                 GET: "getCalendar",
@@ -18,7 +24,7 @@ class UrlMappings {
 
         "/REST/calendar/$cal/$year/$month?/$day?" (controller: "calendar", parseRequest: true) {
             action = [
-                    GET: "getPhotoContent",
+                    GET: "getPhotoContent"
             ]
         }
 

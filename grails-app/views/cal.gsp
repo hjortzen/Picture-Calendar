@@ -8,6 +8,9 @@
         <script type='text/javascript' src='fullcalendar/fullcalendar.js'></script>
         <script type="text/javascript">
             $(document).ready(function() {
+                var BASE_URL = "http://localhost:8080/Picture-Calendar/REST/";
+
+
                 $('#calendar').fullCalendar({
                     header: {
                         left: 'prev,next, today',
@@ -30,13 +33,12 @@
                 });
 
                 function fetchEvents(start, end, callback) {
-                    var baseUrl = "http://localhost:8080/Picture-Calendar/REST/";
                     var calendarId = 1;
                     var months = monthsBetween(start, end);
                     var events = [];
 
                     for (var i=1; i<months.length-1; i++) { //TODO: Remove -1
-                        var ajaxUrl = baseUrl + "calendar/" + calendarId + '/' + months[i].getFullYear() + "/" + (months[i].getMonth()+1);
+                        var ajaxUrl = BASE_URL + "calendar/" + calendarId + '/' + months[i].getFullYear() + "/" + (months[i].getMonth()+1);
                         //Perform AJAX call
                         function doIt() {
                             var last = i===(months.length-1-1); //TODO: Reset to .lenght-1 only
@@ -87,7 +89,7 @@
                 }
 
                 function customEventRender(event, element) {
-                    return $( '<div class="photoEntry" />' ).html('<img src=\"' + event.url + '\"></img>');
+                    return $( '<div class="photoEntry" />' ).html('<img src=\"' + BASE_URL + 'entry/' + event.id + '/content' + '\"></img>');
                 }
 
                 function eventClicked(calEvent, jsEvent, view) {
