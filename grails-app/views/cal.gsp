@@ -7,6 +7,7 @@
         <script type='text/javascript' src='fancybox/jquery.fancybox-1.3.4.pack.js'></script>
 
         <link rel='stylesheet' type='text/css' href='fullcalendar/fullcalendar.css' />
+        <link rel='stylesheet' type='text/css' href='fullcalendar/ui-lightness/jquery-ui-1.8.16.custom.css' media="screen"/>
         <link rel='stylesheet' type='text/css' href='css/calendar.css' />
         <link rel='stylesheet' type='text/css' href='fancybox/jquery.fancybox-1.3.4.css' media="screen"/>
 
@@ -15,6 +16,7 @@
                 var BASE_URL = "http://localhost:8080/Picture-Calendar/REST/";
 
                 $('#calendar').fullCalendar({
+                    theme: true,
                     header: {
                         left: 'prev,next, today',
                         center: 'title',
