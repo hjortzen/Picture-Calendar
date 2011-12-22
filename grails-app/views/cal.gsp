@@ -94,16 +94,18 @@
                 }
 
                 function customEventRender(event, element) {
+                    var imgUrl = BASE_URL + 'entry/' + event.id + '/content';
                     var title = event.title;
                     if (event.url) {
                         title += ' <a target=\'_blank\' class=\'originalURL\' href=\'' + event.url + '\'>(original)</a>';
                     }
                     return $( '<div class="photoEntry" />' )
-                    .html( '<a href="' + event.url + '" class="fancyImage" title="' + title + '"><img src="' + BASE_URL + 'entry/' + event.id + '/content' + '" /></a>' );
+                    .html( '<a href="' + imgUrl + '" class="fancyImage" title="' + title + '"><img src="' + imgUrl + '" /></a>' );
                 }
 
                 function registerFancyBox() {
                     $( 'a.fancyImage' ).fancybox({
+                        type: 'image',
                         hideOnContentClick:     true,
                         transitionIn:           'elastic',
                         transitionOut:          'elastic'
