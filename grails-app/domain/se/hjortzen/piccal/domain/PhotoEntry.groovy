@@ -12,7 +12,7 @@ class PhotoEntry {
     static constraints = {
         originalUrl(url: true, nullable: true)
         description(nullable: true)
-        content(maxSize: 1048567)
+        content(maxSize: 1048567, nullable: true)
         thumbnail(maxSize: 1048567, nullable: true)
     }
 

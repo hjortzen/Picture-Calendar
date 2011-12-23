@@ -5,13 +5,28 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile
 
 class PhotoEntryController {
     def createPhotoEntry = {
-        println(params);
+        def cal = se.hjortzen.piccal.domain.Calendar.get(params.cal);
+        if (!cal) {
+            render(status: 400, text: 'Specified calendar does not exist')
+            return
+        }
+        if (cal.user.id != session.getAttribute("user").id) {
+            render(status: 401, text: 'This requires a logged in user with sufficient authorization')
+            return
+        }
         def dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH");
         def targetDateStr = params.year + '-' + params.month + '-' + params.day
         def targetAsDate = dateFormat.parse(targetDateStr + 'T00')
-        def existingEntry = PhotoEntry.findByTargetDateBetween(targetAsDate, targetAsDate + 1)
-        if (existingEntry) {
-            render (status: 409, text: 'Entry already exists')
+        def existingEntries = PhotoEntry.findAllByTargetDateBetween(targetAsDate, targetAsDate + 1)
+        //Check if the calendar id is also a match
+        boolean alreadyExists = false;
+        existingEntries.each() {
+            if (it.calendar.id == cal.id) {
+                alreadyExists = true
+            }
+        }
+        if (alreadyExists) {
+            render(status: 409, text: 'Entry already exists')
             return
         }
 
@@ -24,14 +39,22 @@ class PhotoEntryController {
             newEntry.createDate = new Date();
         }
         newEntry.originalUrl = params.origingalUrl;
-        newEntry.calendar = se.hjortzen.piccal.domain.Calendar.get(params.cal);
+        newEntry.calendar =  cal;
         if (params.content) {
             newEntry.content = params.content.bytes
             println('Content length: ' + newEntry.content.length)
         } else {
             newEntry.content = 'n/a'
         }
-        newEntry.save();
+
+        if (!newEntry.validate()) {
+            if (newEntry.errors.errorCount != 0) {
+                response.status = 500
+                render newEntry.errors as JSON
+                return;
+            }
+        }
+        newEntry.save()
         render(status:  200, text: 'Entry created successfully')
     }
 
