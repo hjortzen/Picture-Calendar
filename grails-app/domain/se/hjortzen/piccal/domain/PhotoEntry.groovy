@@ -12,8 +12,10 @@ class PhotoEntry {
     static constraints = {
         originalUrl(url: true, nullable: true)
         description(nullable: true)
-        thumbnail(nullable: true)
+        content(maxSize: 1048567)
+        thumbnail(maxSize: 1048567, nullable: true)
     }
+
     String toString() {
         return targetDate;
     }

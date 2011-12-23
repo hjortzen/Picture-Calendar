@@ -1,11 +1,12 @@
 package se.hjortzen.piccal.domain
 import grails.converters.*
 import java.text.SimpleDateFormat
+import org.springframework.web.multipart.commons.CommonsMultipartFile
 
 class PhotoEntryController {
     def createPhotoEntry = {
+        println(params);
         def dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH");
-        //println('About to create a photo entry for the day ' + params.year + '-' + params.month + '-' + params.day + ' in the calendar with id ' + params.cal)
         def targetDateStr = params.year + '-' + params.month + '-' + params.day
         def targetAsDate = dateFormat.parse(targetDateStr + 'T00')
         def existingEntry = PhotoEntry.findByTargetDateBetween(targetAsDate, targetAsDate + 1)
@@ -14,21 +15,23 @@ class PhotoEntryController {
             return
         }
 
-        def converter = new JSON(PhotoEntry);
-        def jsonData = converter.parse(params.newEntry)
-        println(jsonData)
         def newEntry = new PhotoEntry();
-        newEntry.description = jsonData.description;
+        newEntry.description = params.description;
         newEntry.targetDate = dateFormat.parse(targetDateStr + 'T13')
-        newEntry.createDate = dateFormat.parse(jsonData.createDate)
-        newEntry.originalUrl = jsonData.origingalUrl;
+        if (params.createDate) {
+            newEntry.createDate = dateFormat.parse( params.createDate )    
+        } else {
+            newEntry.createDate = new Date();
+        }
+        newEntry.originalUrl = params.origingalUrl;
         newEntry.calendar = se.hjortzen.piccal.domain.Calendar.get(params.cal);
-        newEntry.content = jsonData.content;
-        if (!newEntry.content) {
+        if (params.content) {
+            newEntry.content = params.content.bytes
+            println('Content length: ' + newEntry.content.length)
+        } else {
             newEntry.content = 'n/a'
         }
         newEntry.save();
-        println('New object: ' + newEntry);
         render(status:  200, text: 'Entry created successfully')
     }
 
@@ -37,16 +40,16 @@ class PhotoEntryController {
         if (entry) {
             println('Entry (' + entry.description + ') found, checking content')
             if (entry.content) {
-                byte[] respContent = getFileContent(); //entry.content
+                byte[] respContent = entry.content //getFileContent();
                 response.contentLength = respContent.length
                 response.contentType = "image/jpeg"
                 response.setHeader('Accept-Ranges','bytes')
                 response.outputStream << respContent
             } else {
-                render "Entry found, no content"
+                render(status: 204, text: 'No content (but entry exists)')
             }
         } else {
-            render "No content"
+            render(status: 204, text: 'No content')
         }
     }
 
@@ -55,31 +58,16 @@ class PhotoEntryController {
         if (entry) {
             println('Entry (' + entry.description + ') found, checking thumbnail')
             if (entry.thumbnail) {
-                byte[] respContent = getFileContent(); //entry.thumbnail
+                byte[] respContent = entry.thumbnail
                 response.contentLength = respContent.length
                 response.contentType = "image/jpeg"
                 response.setHeader('Accept-Ranges','bytes')
                 response.outputStream << respContent
             } else {
-                render "Entry found, no content"
+                render(status: 204, text: 'No content (but entry exists)')
             }
         } else {
-            render "No content"
+            render(status: 204, text: 'No content')
         }
-    }
-    
-    private byte[] getFileContent() {
-        def f = new File("c:/picture.jpg");
-        byte[] content = new byte [f.length()];
-        InputStream is = new FileInputStream(f);
-
-        int offset = 0;
-        int numRead = 0;
-        while (offset < content.length
-                && (numRead=is.read(content, offset, content.length-offset)) >= 0) {
-            offset += numRead;
-        }
-        is.close();
-        return content;
     }
 }
