@@ -42,7 +42,7 @@ class CalendarController {
         }
         //println("Requesting date: " + requestDate)
         //println("To: " + toDate.time)
-        def photoEntries = PhotoEntry.findAllByTargetDateBetween(requestDate, toDate.time)
+        def photoEntries = PhotoEntry.findAllByTargetDateBetween(requestDate, (toDate.time+1))
         if (photoEntries) {
             render photoEntries as JSON
         } else {

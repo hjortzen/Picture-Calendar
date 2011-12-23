@@ -9,13 +9,27 @@ class UrlMappings {
 			}
 		}
 
-        "/REST/entry/$id/content" (controller: "photoEntry", parseRequest: true) {
+        //PhotoEntry
+        "/REST/entry/$id/content"(controller: "photoEntry", parseRequest: true) {
             action = [
                     GET: "getPhotoContent"
             ]
         }
+        "/REST/entry/$id/thumbnail"(controller: "photoEntry", parseRequest: true) {
+            action = [
+                    GET: "getThumbnail"
+            ]
+        }
 
-        "/REST/calendar/$id?" (controller: "calendar", parseRequest: true) {
+        "/REST/entry/$cal/$year/$month/$day"(controller: "photoEntry", parseRequest: true) {
+            action = [
+                    POST:  "createPhotoEntry",
+                    PUT: "createPhotoEntry"
+            ]
+        }
+        //END PhotoEntry
+
+        "/REST/calendar/$id?"(controller: "calendar", parseRequest: true) {
             action = [
                 GET: "getCalendar",
                 PUT: "createCalendar"

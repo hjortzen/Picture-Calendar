@@ -2,6 +2,7 @@ package se.hjortzen.piccal.domain
 
 class PhotoEntry {
     byte[] content;
+    byte[] thumbnail;
     String description;
     Date createDate;
     Date targetDate;
@@ -11,6 +12,7 @@ class PhotoEntry {
     static constraints = {
         originalUrl(url: true, nullable: true)
         description(nullable: true)
+        thumbnail(nullable: true)
     }
     String toString() {
         return targetDate;
