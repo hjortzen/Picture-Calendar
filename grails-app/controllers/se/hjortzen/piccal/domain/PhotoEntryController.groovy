@@ -38,7 +38,7 @@ class PhotoEntryController {
         } else {
             newEntry.createDate = new Date();
         }
-        newEntry.originalUrl = params.origingalUrl;
+        newEntry.originalUrl = params.originalUrl;
         newEntry.calendar =  cal;
         if (params.content) {
             newEntry.content = params.content.bytes

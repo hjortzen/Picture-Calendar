@@ -35,5 +35,63 @@
 	-moz-border-radius: 10px 10px 10px 10px;
 	-webkit-border-radius: 10px 10px 10px 10px;
 	border-radius: 10px 10px 10px 10px;
-
 }
+
+#newPhotoEntryForm legend {
+  color: #0B77B7;
+} 
+
+#newPhotoEntryForm label {
+  float: left;
+  text-align: right;
+  margin-right: 1em;
+  width: 8em;
+}
+      
+#newPhotoEntryForm input[type="text"] {
+  -webkit-border-radius: 0.4em;
+  -moz-border-radius: 0.4em;
+  border-radius: 0.4em;
+  padding:0.20em;
+  margin-bottom: 0.25em;
+  border:1px solid #ddd;
+  background: #fafafa;
+  width: 16em;
+}
+
+#newPhotoEntryForm input:hover, input:focus {
+  border-color:#c5c5c5;
+  background:#f6f6f6;
+}
+      
+#newPhotoEntryForm fieldset {
+  -webkit-border-radius: 0.4em;
+  -moz-border-radius: 0.4em;
+  border-radius: 0.4em;              
+}
+
+#labelShowDate {
+  color: gray;
+}
+
+#fileInput {
+  position: relative;
+}
+
+#imageFile {
+  position: relative;
+  z-index: 9999;
+  opacity: 0;
+}
+
+#dummyFile {
+  position: absolute;
+  top: 0 px;
+  left: 158px;
+  width: 16em !important;
+}
+
+#dummyFile input {
+  width: 13em !important;
+}
+

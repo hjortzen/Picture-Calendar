@@ -5,15 +5,19 @@
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
         <script type='text/javascript' src='fullcalendar/fullcalendar.js'></script>
         <script type='text/javascript' src='fancybox/jquery.fancybox-1.3.4.pack.js'></script>
+        <script type="text/javascript" src="js/jquery.form.js"></script>
 
+
+        <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/base/jquery-ui.css" type="text/css" media="all" />
+        <link rel='stylesheet' type='text/css' href='fullcalendar/ui-lightness/jquery-ui-1.8.16.custom.css' media="screen" />
         <link rel='stylesheet' type='text/css' href='fullcalendar/fullcalendar.css' />
-        <link rel='stylesheet' type='text/css' href='fullcalendar/ui-lightness/jquery-ui-1.8.16.custom.css' media="screen"/>
         <link rel='stylesheet' type='text/css' href='css/calendar.css' />
         <link rel='stylesheet' type='text/css' href='fancybox/jquery.fancybox-1.3.4.css' media="screen"/>
 
         <script type="text/javascript">
             $(document).ready(function() {
                 var BASE_URL = "http://localhost:8080/Picture-Calendar/REST/";
+                var calendarId = 1;
 
                 $('#calendar').fullCalendar({
                     theme: true,
@@ -34,11 +38,11 @@
                     },
                     events: fetchEvents,
                     eventRender: customEventRender,
-                    eventAfterRender:  registerFancyBox
+                    eventAfterRender:  registerFancyBox,
+                    dayClick: dayClicked
                 });
 
                 function fetchEvents(start, end, callback) {
-                    var calendarId = 1;
                     var months = monthsBetween(start, end);
                     var events = [];
 
@@ -111,6 +115,42 @@
                         transitionOut:          'elastic'
                     });
                 }
+
+                function dayClicked( date, allDay, jsEvent, view ) {
+                    $( '#addEntry' ).resetForm();
+                    $( '#addEntry' ).attr('action', BASE_URL + 'entry/' + calendarId + '/' + date.getFullYear() + '/' + (date.getMonth()+1) + '/' + date.getDate());
+                    $( '#showDate' ).attr('value',date.toDateString());
+                    $( '#newPhotoEntryForm' ).dialog( "open" );
+                }
+
+                $( "#newPhotoEntryForm" ).dialog({
+                  title: 'Add a new photo',
+                  autoOpen: false,
+                  show: 'fold',
+                  hide: 'fold',
+                  height: 500,
+                  width: 550,
+                  modal: true,
+                  buttons: {
+                      Add: function() {
+                          $( '#addEntry' ).ajaxSubmit();
+                          $( '#newPhotoEntryForm' ).dialog( 'close' );
+                          setTimeout(function() {
+                            $( '#calendar' ).fullCalendar( 'refetchEvents' );
+                          }, 800);
+                      },
+                      Cancel: function() {
+                          $( this ).dialog( 'close' );
+                      }
+                  }
+                });
+                var options = {
+                  type: 'POST'
+                };
+                $( '#addEntry' ).ajaxForm(options);
+                $( '#imageFile' ).change( function(e) {
+                    $( '#dummy' ).attr('value', $(this).val());
+                 });
             });
         </script>
     </head>
@@ -119,6 +159,27 @@
         <div id="calendar-content" >
             <span id="loading">Loading...</span>
             <div id="calendar" />
+        </div>
+        <div id="newPhotoEntryForm" title="Basic dialog">
+          <p>Provide additional information and the picture you wish to upload below. External link can be used to link to an off-site resource like your own personal web site.</p>
+          <form id="addEntry" action="" METHOD="POST">
+              <fieldset>
+                  <legend>Image Details</legend>
+                  <label id="labelShowDate" for="showDate">Date:</label>
+                  <input type="text" disabled="true" name="showDate" id="showDate" value="2011" />
+                  <label for="description">Description:</label>
+                  <input name="description" id="description" type="text" class="ui-widget-content ui-corner-al"/>
+                  <label for="originalUrl">External link:</label>
+                  <input id="originalUrl" type="text" name="originalUrl" class="ui-widget-content ui-corner-al"/>
+                  <div id="fileInput">
+                    <label for="imageFile">Image:</label>
+                    <input id="imageFile" type="file" name="content" class="ui-widget-content ui-corner-al"/>
+                    <span id="dummyFile" >
+                        <input type="text" name="dummy" id="dummy" value="..."/> <img src="images/filebrowse.png" />
+                    </span>
+                  </div>
+              </fieldset>
+          </form>
         </div>
     </body>
 </html>
