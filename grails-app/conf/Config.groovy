@@ -61,10 +61,10 @@ cas {
 // set per-environment serverURL stem for creating absolute links
 environments {
     production {
-        grails.serverURL = "http://www.changeme.com"
+        grails.serverURL = "http://picture-calendar.cloudfoundry.com"
         cas.loginUrl = 'https://cas.user.uu.se/cas/login'
         cas.validateUrl = 'https://cas.user.uu.se/cas/serviceValidate'
-        cas.serverName = 'localhost:8080'
+        cas.serverName = 'picture-calendar.cloudfoundry.com'
     }
     development {
         grails.serverURL = "http://localhost:8080/${appName}"
@@ -104,3 +104,6 @@ log4j = {
 
     warn   'org.mortbay.log'
 }
+
+
+grails.plugin.cloudfoundry.appname = 'picture-calendar'

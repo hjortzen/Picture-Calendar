@@ -1,100 +1,186 @@
 <html>
     <head>
-        <title>Welcome to Grails</title>
-        <meta name="layout" content="main" />
-        <style type="text/css" media="screen">
+        <title>Picture 364 - a calender full of photos!</title>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
+        <script type='text/javascript' src='fullcalendar/fullcalendar.min.js'></script>
+        <script type='text/javascript' src='fancybox/jquery.fancybox-1.3.4.pack.js'></script>
+        <script type="text/javascript" src="js/jquery.form.js"></script>
 
-        #nav {
-            margin-top:20px;
-            margin-left:30px;
-            width:228px;
-            float:left;
 
-        }
-        .homePagePanel * {
-            margin:0px;
-        }
-        .homePagePanel .panelBody ul {
-            list-style-type:none;
-            margin-bottom:10px;
-        }
-        .homePagePanel .panelBody h1 {
-            text-transform:uppercase;
-            font-size:1.1em;
-            margin-bottom:10px;
-        }
-        .homePagePanel .panelBody {
-            background: url(images/leftnav_midstretch.png) repeat-y top;
-            margin:0px;
-            padding:15px;
-        }
-        .homePagePanel .panelBtm {
-            background: url(images/leftnav_btm.png) no-repeat top;
-            height:20px;
-            margin:0px;
-        }
+        <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/base/jquery-ui.css" type="text/css" media="all" />
+        <link rel='stylesheet' type='text/css' href='fullcalendar/ui-lightness/jquery-ui-1.8.16.custom.css' media="screen" />
+        <link rel='stylesheet' type='text/css' href='fullcalendar/fullcalendar.css' />
+        <link rel='stylesheet' type='text/css' href='css/calendar.css' />
+        <link rel='stylesheet' type='text/css' href='fancybox/jquery.fancybox-1.3.4.css' media="screen"/>
 
-        .homePagePanel .panelTop {
-            background: url(images/leftnav_top.png) no-repeat top;
-            height:11px;
-            margin:0px;
-        }
-        h2 {
-            margin-top:15px;
-            margin-bottom:15px;
-            font-size:1.2em;
-        }
-        #pageBody {
-            margin-left:280px;
-            margin-right:20px;
-        }
-        </style>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                var BASE_URL = "http://" + location.hostname + (location.port?":"+location.port:"") + "/Picture-Calendar/REST/";
+                var calendarId = 1;
+
+                $('#calendar').fullCalendar({
+                    theme: true,
+                    header: {
+                        left: 'prev,next, today',
+                        center: 'title',
+                        right: ''
+                    },
+                    buttonText: {
+                        today: 'Today'
+                    },
+                    firstDay: 1,
+                    weekMode: 'variable',
+                    aspectRatio: 1.4,
+                    loading: function(bool) {
+                        if (bool) $('#loading').show();
+                        else $('#loading').hide();
+                    },
+                    events: fetchEvents,
+                    eventRender: customEventRender,
+                    eventAfterRender:  registerFancyBox,
+                    dayClick: dayClicked
+                });
+
+                function fetchEvents(start, end, callback) {
+                    var months = monthsBetween(start, end);
+                    var events = [];
+
+                    for (var i=1; i<months.length-1; i++) { //TODO: Remove -1
+                        var ajaxUrl = BASE_URL + "calendar/" + calendarId + '/' + months[i].getFullYear() + "/" + (months[i].getMonth()+1);
+                        //Perform AJAX call
+                        function doIt() {
+                            var last = i===(months.length-1-1); //TODO: Reset to .length-1 only
+                            $.ajax({
+                                url: ajaxUrl,
+                                dataType: 'json',
+                                success: function(result) {
+                                    $.each(result, function( key, value) {
+                                        events.push( {
+                                            id:        value.id,
+                                            allDay:     true,
+                                            title:      value.description,
+                                            start:      value.targetDate,
+                                            end:        value.targetDate,
+                                            content:    value.content,
+                                            url:        value.originalUrl
+                                        });
+                                    });
+                                    if (last) { //If this is the last ajax call then use callback
+                                        callback(events);
+                                    }
+                                }
+                            });
+                        }
+                        doIt();
+                    }
+                }
+
+                function monthsBetween(start, end) {
+                    var pointer = new Date(start.getTime());
+                    pointer.setDate(28);
+                    var months = [];
+                    months.push(start);
+                    while( pointer < end ) {
+                        months.push( new Date(rollMonth(pointer).getTime()) );
+                    }
+                    return months;
+                }
+
+                function rollMonth(date) {
+                    if (date.getMonth() == 11) {
+                        date.setFullYear(date.getFullYear() + 1);
+                        date.setMonth(0);
+                    } else {
+                        date.setMonth(date.getMonth() + 1);
+                    }
+                    return date;
+                }
+
+                function customEventRender(event, element) {
+                    var imgUrl = BASE_URL + 'entry/' + event.id + '/content';
+                    var title = event.title;
+                    if (event.url) {
+                        title += ' <a target=\'_blank\' class=\'originalURL\' href=\'' + event.url + '\'>(original)</a>';
+                    }
+                    return $( '<div class="photoEntry" />' )
+                    .html( '<a href="' + imgUrl + '" class="fancyImage" title="' + title + '"><img src="' + imgUrl + '" /></a>' );
+                }
+
+                function registerFancyBox() {
+                    $( 'a.fancyImage' ).fancybox({
+                        type: 'image',
+                        hideOnContentClick:     true,
+                        transitionIn:           'elastic',
+                        transitionOut:          'elastic'
+                    });
+                }
+
+                function dayClicked( date, allDay, jsEvent, view ) {
+                    $( '#addEntry' ).resetForm();
+                    $( '#dummy' ).attr('value', '...');
+                    $( '#addEntry' ).attr('action', BASE_URL + 'entry/' + calendarId + '/' + date.getFullYear() + '/' + (date.getMonth()+1) + '/' + date.getDate());
+                    $( '#showDate' ).attr('value',date.toDateString());
+                    $( '#newPhotoEntryForm' ).dialog( "open" );
+                }
+
+                $( "#newPhotoEntryForm" ).dialog({
+                  title: 'Add a new photo',
+                  autoOpen: false,
+                  show: 'fold',
+                  hide: 'fold',
+                  height: 500,
+                  width: 550,
+                  modal: true,
+                  buttons: {
+                      Add: function() {
+                          $( '#addEntry' ).ajaxSubmit();
+                          $( '#newPhotoEntryForm' ).dialog( 'close' );
+                          setTimeout(function() {
+                            $( '#calendar' ).fullCalendar( 'refetchEvents' );
+                          }, 800);
+                      },
+                      Cancel: function() {
+                          $( this ).dialog( 'close' );
+                      }
+                  }
+                });
+                var options = {
+                  type: 'POST'
+                };
+                $( '#addEntry' ).ajaxForm(options);
+                $( '#imageFile' ).change( function(e) {
+                    $( '#dummy' ).attr('value', $(this).val());
+                 });
+            });
+        </script>
     </head>
     <body>
-        <div id="nav">
-            <div class="homePagePanel">
-                <div class="panelTop"></div>
-                <div class="panelBody">
-                    <h1>Application Status</h1>
-                    <ul>
-                        <li>App version: <g:meta name="app.version"></g:meta></li>
-                        <li>Grails version: <g:meta name="app.grails.version"></g:meta></li>
-                        <li>Groovy version: ${org.codehaus.groovy.runtime.InvokerHelper.getVersion()}</li>
-                        <li>JVM version: ${System.getProperty('java.version')}</li>
-                        <li>Controllers: ${grailsApplication.controllerClasses.size()}</li>
-                        <li>Domains: ${grailsApplication.domainClasses.size()}</li>
-                        <li>Services: ${grailsApplication.serviceClasses.size()}</li>
-                        <li>Tag Libraries: ${grailsApplication.tagLibClasses.size()}</li>
-                    </ul>
-                    <h1>Installed Plugins</h1>
-                    <ul>
-                        <g:set var="pluginManager"
-                               value="${applicationContext.getBean('pluginManager')}"></g:set>
-
-                        <g:each var="plugin" in="${pluginManager.allPlugins}">
-                            <li>${plugin.name} - ${plugin.version}</li>
-                        </g:each>
-
-                    </ul>
-                </div>
-                <div class="panelBtm"></div>
-            </div>
+        <h1>Showing Calendar 1 (static, please change when calendar selection is available)</h1>
+        <div id="calendar-content" >
+            <span id="loading">Loading...</span>
+            <div id="calendar" />
         </div>
-        <div id="pageBody">
-            <h1>Welcome to Grails</h1>
-            <p>Congratulations, you have successfully started your first Grails application! At the moment
-            this is the default page, feel free to modify it to either redirect to a controller or display whatever
-            content you may choose. Below is a list of controllers that are currently deployed in this application,
-            click on each to execute its default action:</p>
-
-            <div id="controllerList" class="dialog">
-                <h2>Available Controllers:</h2>
-                <ul>
-                    <g:each var="c" in="${grailsApplication.controllerClasses.sort { it.fullName } }">
-                        <li class="controller"><g:link controller="${c.logicalPropertyName}">${c.fullName}</g:link></li>
-                    </g:each>
-                </ul>
-            </div>
+        <div id="newPhotoEntryForm" title="Basic dialog">
+          <p>Provide additional information and the picture you wish to upload below. External link can be used to link to an off-site resource like your own personal web site.</p>
+          <form id="addEntry" action="" METHOD="POST">
+              <fieldset>
+                  <legend>Image Details</legend>
+                  <label id="labelShowDate" for="showDate">Date:</label>
+                  <input type="text" disabled="true" name="showDate" id="showDate" value="2011" />
+                  <label for="description">Description:</label>
+                  <input name="description" id="description" type="text" class="ui-widget-content ui-corner-al"/>
+                  <label for="originalUrl">External link:</label>
+                  <input id="originalUrl" type="text" name="originalUrl" class="ui-widget-content ui-corner-al"/>
+                  <div id="fileInput">
+                    <label for="imageFile">Image:</label>
+                    <input id="imageFile" type="file" name="content" class="ui-widget-content ui-corner-al"/>
+                    <span id="dummyFile" >
+                        <input type="text" name="dummy" id="dummy" value="..."/> <img src="images/filebrowse.png" />
+                    </span>
+                  </div>
+              </fieldset>
+          </form>
         </div>
     </body>
 </html>

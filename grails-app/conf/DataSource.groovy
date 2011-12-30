@@ -29,7 +29,11 @@ environments {
     production {
         dataSource {
             dbCreate = "update"
-            url = "jdbc:hsqldb:file:prodDb;shutdown=true"
+            driverClassName = "com.mysql.jdbc.Driver"
+            url = "jdbc:mysql://localhost/grails"
+            username = "grails"
+            password = "groovy"
+            dialect = "org.hibernate.dialect.MySQLInnoDBDialect"
         }
     }
 }
