@@ -2,6 +2,7 @@ package se.hjortzen.piccal.domain
 import grails.converters.*
 import java.text.SimpleDateFormat
 import org.springframework.web.multipart.commons.CommonsMultipartFile
+import org.grails.plugins.imagetools.*
 
 class PhotoEntryController {
     def createPhotoEntry = {
@@ -43,6 +44,13 @@ class PhotoEntryController {
         if (params.content) {
             newEntry.content = params.content.bytes
             println('Content length: ' + newEntry.content.length)
+            //Create thumbnail
+            def imageTool = new ImageTool()
+            imageTool.load(newEntry.content)
+            imageTool.square()
+            imageTool.thumbnail(90)
+            newEntry.thumbnail = imageTool.getBytes("JPEG")
+            println('A thumbnail has been created, size ' + newEntry.thumbnail.length)
         } else {
             newEntry.content = 'n/a'
         }

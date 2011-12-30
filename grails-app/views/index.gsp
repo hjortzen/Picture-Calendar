@@ -16,7 +16,12 @@
 
         <script type="text/javascript">
             $(document).ready(function() {
-                var BASE_URL = "http://" + location.hostname + (location.port?":"+location.port:"") + "/Picture-Calendar/REST/";
+                var host = location.hostname + (location.port?":"+location.port:"");
+                var apiPath = "/REST/";
+                if ( host.indexOf('localhost') != -1 ) { //If local system the prepend the webapplication path
+                    apiPath = '/Picture-Calendar/REST/';
+                }
+                var BASE_URL = 'http://' + host + apiPath;
                 var calendarId = 1;
 
                 $('#calendar').fullCalendar({
@@ -99,12 +104,13 @@
 
                 function customEventRender(event, element) {
                     var imgUrl = BASE_URL + 'entry/' + event.id + '/content';
+                    var thumbnailUrl = BASE_URL + 'entry/' + event.id + '/thumbnail';
                     var title = event.title;
                     if (event.url) {
                         title += ' <a target=\'_blank\' class=\'originalURL\' href=\'' + event.url + '\'>(original)</a>';
                     }
                     return $( '<div class="photoEntry" />' )
-                    .html( '<a href="' + imgUrl + '" class="fancyImage" title="' + title + '"><img src="' + imgUrl + '" /></a>' );
+                    .html( '<a href="' + imgUrl + '" class="fancyImage" title="' + title + '"><img src="' + thumbnailUrl + '" /></a>' );
                 }
 
                 function registerFancyBox() {
