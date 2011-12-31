@@ -11,6 +11,10 @@ class CASFilters {
             before = {
                 if(session?.getAttribute("loggedIn") == null) {
                     def username = session?.getAttribute(CASFilter.CAS_FILTER_USER)
+                    if (!username) {
+                        //println('User not logged in')
+                        return;
+                    }
                     if(!User.findByLoginName(username)) {
                         def us = new User(description: username, loginName: username, email: "default@nowhere.org" )
                         us.save();

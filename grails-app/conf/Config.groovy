@@ -52,9 +52,8 @@ grails.spring.bean.packages = []
 grails.exceptionresolver.params.exclude = ['password']
 
 cas {
-    urlPattern = '/*'
+    urlPattern = ['/REST/login', '/login']
     disabled = false
-
     cas.mocking = false
 }
 

@@ -42,6 +42,13 @@ class UrlMappings {
             ]
         }
 
+        //USER
+        "/REST/isLoggedIn"(controller: "user") {
+            action = [
+                    GET: "isUserLoggedIn"
+            ]
+        }
+        //END User
 		"/"(view:"/index")
 		"500"(view:'/error')
 	}

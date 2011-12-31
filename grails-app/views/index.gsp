@@ -22,6 +22,7 @@
                     apiPath = '/Picture-Calendar/REST/';
                 }
                 var BASE_URL = 'http://' + host + apiPath;
+                var USER_LOGGED_IN = false;
                 var calendarId = 1;
 
                 $('#calendar').fullCalendar({
@@ -123,6 +124,10 @@
                 }
 
                 function dayClicked( date, allDay, jsEvent, view ) {
+                    if (!USER_LOGGED_IN) {
+                        console.log('To add new pictures you need to be logged in');
+                        return;
+                    }
                     $( '#addEntry' ).resetForm();
                     $( '#dummy' ).attr('value', '...');
                     $( '#addEntry' ).attr('action', BASE_URL + 'entry/' + calendarId + '/' + date.getFullYear() + '/' + (date.getMonth()+1) + '/' + date.getDate());
@@ -131,25 +136,44 @@
                 }
 
                 $( "#newPhotoEntryForm" ).dialog({
-                  title: 'Add a new photo',
-                  autoOpen: false,
-                  show: 'fold',
-                  hide: 'fold',
-                  height: 500,
-                  width: 550,
-                  modal: true,
-                  buttons: {
-                      Add: function() {
-                          $( '#addEntry' ).ajaxSubmit();
-                          $( '#newPhotoEntryForm' ).dialog( 'close' );
-                          setTimeout(function() {
-                            $( '#calendar' ).fullCalendar( 'refetchEvents' );
-                          }, 800);
-                      },
-                      Cancel: function() {
-                          $( this ).dialog( 'close' );
-                      }
-                  }
+                    title: 'Add a new photo',
+                    autoOpen: false,
+                    show: 'fold',
+                    hide: 'fold',
+                    height: 500,
+                    width: 550,
+                    modal: true,
+                    buttons: {
+                        Add: function() {
+                            $( '#addEntry' ).ajaxSubmit({
+                                error: function( jqXHR ) {
+                                    var message = "You aren't allowed to create photographs, please login as correct user and try again.";
+                                    var title = "Not allowed";
+                                    if (jqXHR.status != 401) {
+                                        message = "Something went wrong (" + jqXHR.status + ") and the photograph wasn't saved";
+                                        title = "Unknown error";
+                                    }
+                                    $( "<p>" + message + "</p>" ).dialog({
+                                        title: title,
+                                        modal: true,
+                                        buttons: {
+                                            Ok: function() {
+                                                $( this ).dialog( "close" );
+                                            }
+                                        }
+                                    });
+                                    window.jq = jqXHR;
+                                }
+                             });
+                            $( '#newPhotoEntryForm' ).dialog( 'close' );
+                            setTimeout(function() {
+                                $( '#calendar' ).fullCalendar( 'refetchEvents' );
+                            }, 800);
+                        },
+                        Cancel: function() {
+                            $( this ).dialog( 'close' );
+                        }
+                    }
                 });
                 var options = {
                   type: 'POST'
@@ -157,11 +181,33 @@
                 $( '#addEntry' ).ajaxForm(options);
                 $( '#imageFile' ).change( function(e) {
                     $( '#dummy' ).attr('value', $(this).val());
-                 });
+                });
+
+                //Check login status
+                $.ajax({
+                    url: BASE_URL + 'isLoggedIn',
+                    dataType: 'json',
+                    success: function( result ) {
+                        if (result.loggedIn === 'true') {
+                            $( '#login a')
+                            .attr('href', BASE_URL + 'logout')
+                            .html('Logout');
+                            USER_LOGGED_IN = true;
+                        } else {
+                            $( '#login a')
+                            .attr('href', BASE_URL + 'login')
+                            .html('Login');
+                            USER_LOGGED_IN = false;
+                        }
+                    }
+                });
             });
         </script>
     </head>
     <body>
+        <div id="login">
+            <a href="">Login (undetected)</a>
+        </div>
         <h1>Showing Calendar 1 (static, please change when calendar selection is available)</h1>
         <div id="calendar-content" >
             <span id="loading">Loading...</span>

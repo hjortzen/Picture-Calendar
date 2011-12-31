@@ -95,3 +95,6 @@
   width: 13em !important;
 }
 
+#login {
+  float: right;
+}

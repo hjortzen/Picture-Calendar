@@ -6,6 +6,10 @@ import org.grails.plugins.imagetools.*
 
 class PhotoEntryController {
     def createPhotoEntry = {
+        if (!session.getAttribute("user")) {
+            render(status: 401, text: 'This action requires login');
+            return;
+        }
         def cal = se.hjortzen.piccal.domain.Calendar.get(params.cal);
         if (!cal) {
             render(status: 400, text: 'Specified calendar does not exist')
