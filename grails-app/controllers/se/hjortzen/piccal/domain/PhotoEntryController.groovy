@@ -80,7 +80,7 @@ class PhotoEntryController {
                 byte[] respContent = entry.content //getFileContent();
                 withCacheHeaders {
                     etag {
-                        "${entry.id}_${entry.version}"
+                        "content_${entry.id}_${entry.version}"
                     }
                     lastModified {
                         entry.createDate
@@ -101,15 +101,25 @@ class PhotoEntryController {
     }
 
     def getThumbnail = {
-
         PhotoEntry entry = PhotoEntry.get(params.id)
         if (entry) {
             if (entry.thumbnail) {
                 byte[] respContent = entry.thumbnail
-                response.contentLength = respContent.length
-                response.contentType = "image/jpeg"
-                response.setHeader('Accept-Ranges','bytes')
-                response.outputStream << respContent
+                cache shared:true, neverExpires:true
+                withCacheHeaders {
+                    etag {
+                        "thmb_${entry.id}_${entry.version}"
+                    }
+                    lastModified {
+                        entry.createDate
+                    }
+                    generate {
+                        response.contentLength = respContent.length
+                        response.contentType = "image/jpeg"
+                        response.setHeader('Accept-Ranges','bytes')
+                        response.outputStream << respContent
+                    }
+                }
             } else {
                 render(status: 204, text: 'No content (but entry exists)')
             }
