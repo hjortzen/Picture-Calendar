@@ -1,12 +1,11 @@
 <html>
     <head>
-        <title>Picture 364 - a calender full of photos!</title>
+        <title>104 photos - a year of photos!</title>
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
         <script type='text/javascript' src='fullcalendar/fullcalendar.min.js'></script>
         <script type='text/javascript' src='fancybox/jquery.fancybox-1.3.4.pack.js'></script>
         <script type="text/javascript" src="js/jquery.form.js"></script>
-
 
         <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/base/jquery-ui.css" type="text/css" media="all" />
         <link rel='stylesheet' type='text/css' href='fullcalendar/ui-lightness/jquery-ui-1.8.16.custom.css' media="screen" />
@@ -37,7 +36,7 @@
                     },
                     firstDay: 1,
                     weekMode: 'variable',
-                    aspectRatio: 1.4,
+                    aspectRatio: 1.6,
                     loading: function(bool) {
                         if (bool) $('#loading').show();
                         else $('#loading').hide();
@@ -128,9 +127,14 @@
                         console.log('To add new pictures you need to be logged in');
                         return;
                     }
+                    var actionUrl = BASE_URL + 'entry/' + calendarId + '/' + date.getFullYear() + '/' + (date.getMonth()+1) + '/' + date.getDate();
+                    if (checkMobileSafari()) {
+                        var iphoneWindow = window.open('iphone_upload.html?action=' + escape(actionUrl) + '&date=' + escape(date.toDateString()) + '&JSESSIONID=' + readCookie('JSESSIONID'));
+                        return;
+                    }
                     $( '#addEntry' ).resetForm();
                     $( '#dummy' ).attr('value', '...');
-                    $( '#addEntry' ).attr('action', BASE_URL + 'entry/' + calendarId + '/' + date.getFullYear() + '/' + (date.getMonth()+1) + '/' + date.getDate());
+                    $( '#addEntry' ).attr('action', actionUrl);
                     $( '#showDate' ).attr('value',date.toDateString());
                     $( '#newPhotoEntryForm' ).dialog( "open" );
                 }
@@ -202,6 +206,25 @@
                     }
                 });
             });
+
+            function checkMobileSafari() {
+                var regCriteria = /(iPod|iPhone|iPad)/;
+                if (regCriteria.test(navigator.userAgent)) {
+                    return true;
+                }
+                return false;
+            }
+
+            function readCookie(name) {
+                var nameEQ = name + "=";
+                var ca = document.cookie.split(';');
+                for (var i=0;i < ca.length;i++) {
+                    var c = ca[i];
+                    while (c.charAt(0)==' ') c = c.substring(1,c.length);
+                    if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+                }
+                return null;
+            }
         </script>
         <script type="text/javascript">
         
@@ -221,7 +244,9 @@
         <div id="login">
             <a href="">Login (undetected)</a>
         </div>
-        <h1>Showing Calendar 1 (static, please change when calendar selection is available)</h1>
+        <h1>104 photos - 2012</h1>
+        <p>The goal of this calendar is to publish two photos per week throughout the year of 2012.
+        One photo during the week and one from the weekend.
         <div id="calendar-content" >
             <span id="loading">Loading...</span>
             <div id="calendar" />
@@ -235,7 +260,7 @@
                   <input type="text" disabled="true" name="showDate" id="showDate" value="2011" />
                   <label for="description">Description:</label>
                   <input name="description" id="description" type="text" class="ui-widget-content ui-corner-al"/>
-                  <label for="originalUrl">External link:</label>
+                  <label for="originalUrl" id="originalUrlLabel">External link:</label>
                   <input id="originalUrl" type="text" name="originalUrl" class="ui-widget-content ui-corner-al"/>
                   <div id="fileInput">
                     <label for="imageFile">Image:</label>
