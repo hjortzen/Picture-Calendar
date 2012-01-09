@@ -129,7 +129,7 @@
                     }
                     var actionUrl = BASE_URL + 'entry/' + calendarId + '/' + date.getFullYear() + '/' + (date.getMonth()+1) + '/' + date.getDate();
                     if (checkMobileSafari()) {
-                        var iphoneWindow = window.open('iphone_upload.html?action=' + escape(actionUrl) + '&date=' + escape(date.toDateString()) + '&JSESSIONID=' + readCookie('JSESSIONID'));
+                        var iphoneWindow = window.open('iphone_upload.html?action=' + escape(actionUrl) + '&date=' + escape(date.toDateString()) + '&JSESSIONID=' + escape(readCookie('JSESSIONID')));
                         return;
                     }
                     $( '#addEntry' ).resetForm();
@@ -252,7 +252,9 @@
             <div id="calendar" />
         </div>
         <div id="newPhotoEntryForm" title="Basic dialog">
-          <p>Provide additional information and the picture you wish to upload below. <br>External link can be used to link to an off-site resource like your own personal web site.</p>
+          <p>Provide additional information and the picture you wish to <br>
+          upload below. External link can be used to link to an <br>
+          off-site resource like your own personal web site.</p>
           <form id="addEntry" action="" METHOD="POST">
               <fieldset>
                   <legend>Image Details</legend>
