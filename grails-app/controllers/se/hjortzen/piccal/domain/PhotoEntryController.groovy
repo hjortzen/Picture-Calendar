@@ -6,7 +6,9 @@ import org.grails.plugins.imagetools.*
 
 class PhotoEntryController {
     def createPhotoEntry = {
+        println("Params: " + params);
         if (!session.getAttribute("user")) {
+            println('Tried to create entry without being logged in');
             render(status: 401, text: 'This action requires login');
             return;
         }
@@ -16,6 +18,7 @@ class PhotoEntryController {
             return
         }
         if (cal.user.id != session.getAttribute("user").id) {
+            println('Wrong user tried to create entry, ' + session.getAttribute("user").id + ' instead of ' + cal.user.id);
             render(status: 401, text: 'This requires a logged in user with sufficient authorization')
             return
         }

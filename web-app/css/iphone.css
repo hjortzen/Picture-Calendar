@@ -1,0 +1,19 @@
+.fieldsDisabled {
+	color: gray;
+	opacity: 0.4;
+}
+
+fieldset {
+	width: 300px;
+}
+input {
+	display: block;
+}
+
+input[type=text] {
+	width: 250px;
+}
+
+#editDetails {
+  float: right;
+}

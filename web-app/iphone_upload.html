@@ -1,0 +1,105 @@
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="css/iphone.css" />
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+        <script type="text/javascript" src="js/picup.js"></script>
+        <script type="text/javascript">
+            function getURLParameter(name) {
+                return decodeURI((RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]);
+            }
+
+            $(document).ready(function() {
+                //Handle the action URL and other url parameters
+                $('#addPhoto').attr('action', unescape(getURLParameter('action')));
+                var date = getURLParameter('date');
+                if ( date && date != 'null' ) {
+                	$('#showDate').attr('value', unescape(date));
+                }
+                
+                $( '#uploadInfo' ).hide();
+                $( '#nextButton' ).attr('disabled', 'true');
+                
+                $( '#photoDetails input' ).focusout(function() {
+                    if (checkDetailsComplete()) {
+                        $( '#nextButton' ).removeAttr('disabled');
+                    } else {
+                        $( '#nextButton' ).attr('disabled', 'true');
+                    }
+                });
+
+                $( '#nextButton' ).click(function() {
+                  $( '#uploadInfo' ).show();
+                  $( '#photoDetails' ).attr('disabled', 'true');
+                  $( '#photoDetails' ).toggleClass('fieldsDisabled');
+                  registerPicup();  
+                  return false;
+                });
+
+                $( '#editDetails' ).click(function() {
+                      $( '#uploadInfo' ).hide();
+                      $( '#photoDetails' ).removeAttr('disabled');
+                      $( '#photoDetails' ).toggleClass('fieldsDisabled');
+                      return false;
+                });
+            });
+
+            function registerPicup() {
+                var postParams = getFormAsGetParams();
+                var options = {
+                    'referrername'    : escape('Picture-Calendar'),
+                    'purpose'         : escape('Upload a photo to calendar'),
+                    'callbackURL'     : escape('http%3A//picture-calendar.cloudfoundry.com/'),
+                    'posturl'         : escape($( '#addPhoto' ).attr('action')),
+                    'postvalues'      : escape(postParams),
+                    //'returnThumbnailDataURL' : false,
+                    'referrerfavicon' : escape('http%3A//picture-calendar.cloudfoundry.com/favicon.ico')
+                };
+                Picup.convertFileInput( 'mobileInput', options );
+            }
+                        
+            function checkDetailsComplete() {
+                //Check all required fields
+                if ($( '#description' ).val()) {
+                    return true;
+                }
+                return false;
+            }
+            
+            function getFormAsGetParams() {
+                var params = '?';
+                $( '#photoDetails input' ).each(function(index, element) {
+                    if (element.value) {
+                        if (index != 0) {
+                            params += '&';
+                        }
+                        params += this.name + '=' + this.value;
+                    }
+                });
+                return params;
+            }
+        </script>
+    </head>
+
+    <body>
+        <form id="addPhoto" action="" METHOD="POST">
+            <fieldset id="photoDetails">
+                <legend>Image Details</legend>
+                <label id="labelShowDate" for="showDate">Date:</label>
+                <input type="text" disabled="true" name="showDate" id="showDate" value="2011" />
+                <label for="description">Description:</label>
+                <input name="description" id="description" type="text" />
+                <label for="originalUrl" id="originalUrlLabel">External link:</label>
+                <input id="originalUrl" type="text" name="originalUrl" />
+                <button id="nextButton">Next</button>
+            </fieldset>
+            <fieldset id="uploadInfo">
+                <legend>Upload</legend>
+                <label id="labelMobileInput">
+                    Use <a href="http://picupapp.com">Picup</a>: 
+                </label>
+                <input type="file" id="mobileInput" name="mobileInput" />
+                <button id="editDetails">Edit details</button>
+            </div>            
+        </form>
+    </body>
+</html>

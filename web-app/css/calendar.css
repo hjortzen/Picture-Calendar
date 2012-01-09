@@ -1,3 +1,19 @@
+body {
+    width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+h1 {
+    margin: 0px;
+    padding: 0px;
+}
+
+p {
+    width: 900px;
+    margin-top: 0px;
+}
+   
 .photoEntry {
   text-align: center;
   padding-bottom: 5px;
@@ -14,7 +30,7 @@
 }
 
 #calendar-content {
-  width: 800px
+  width: 900px;
 }
 
 #loading {
