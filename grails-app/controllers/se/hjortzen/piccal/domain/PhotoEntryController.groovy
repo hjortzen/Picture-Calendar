@@ -76,13 +76,22 @@ class PhotoEntryController {
     def getPhotoContent = {
         PhotoEntry entry = PhotoEntry.get(params.id)
         if (entry) {
-            println('Entry (' + entry.description + ') found, checking content')
             if (entry.content) {
                 byte[] respContent = entry.content //getFileContent();
-                response.contentLength = respContent.length
-                response.contentType = "image/jpeg"
-                response.setHeader('Accept-Ranges','bytes')
-                response.outputStream << respContent
+                withCacheHeaders {
+                    etag {
+                        "${entry.id}_${entry.version}"
+                    }
+                    lastModified {
+                        entry.createDate
+                    }
+                    generate {
+                        response.contentLength = respContent.length
+                        response.contentType = "image/jpeg"
+                        response.setHeader('Accept-Ranges','bytes')
+                        response.outputStream << respContent
+                    }
+                }
             } else {
                 render(status: 204, text: 'No content (but entry exists)')
             }
@@ -92,9 +101,9 @@ class PhotoEntryController {
     }
 
     def getThumbnail = {
+
         PhotoEntry entry = PhotoEntry.get(params.id)
         if (entry) {
-            println('Entry (' + entry.description + ') found, checking thumbnail')
             if (entry.thumbnail) {
                 byte[] respContent = entry.thumbnail
                 response.contentLength = respContent.length

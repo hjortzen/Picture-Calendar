@@ -252,7 +252,7 @@
             <div id="calendar" />
         </div>
         <div id="newPhotoEntryForm" title="Basic dialog">
-          <p>Provide additional information and the picture you wish to upload below. External link can be used to link to an off-site resource like your own personal web site.</p>
+          <p>Provide additional information and the picture you wish to upload below. <br>External link can be used to link to an off-site resource like your own personal web site.</p>
           <form id="addEntry" action="" METHOD="POST">
               <fieldset>
                   <legend>Image Details</legend>
