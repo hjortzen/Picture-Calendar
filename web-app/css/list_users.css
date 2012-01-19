@@ -1,8 +1,20 @@
+.userEntry {
+    width: 200px;
+
+}
+
 .username {
+    display: block;
     border-bottom: 1px solid #E3E3E3;
     font-size: 1.5em;
-    width: 200px;
-    font-weight: bold;
+    margin-bottom: 15px;
+    text-align: center;
+}
+.calendars a {
+    padding-left: 25px;
+    text-align: left;
+    display: block;
+    text-decoration: none;
 }
 #template {
     display:none;
