@@ -13,6 +13,7 @@ class CalendarController {
         def cal = Calendar.get(params.cal)
         if (!cal) {
             render "Calendar not found"
+            return;
         }
         //TODO: Should we really check for ownership here? GET should always be available to public?
         /*if (cal && cal.user.id != session.getAttribute("user").id) {
@@ -42,6 +43,7 @@ class CalendarController {
         }
         //println("Requesting date: " + requestDate)
         //println("To: " + toDate.time)
+        //TODO: Filter all the entries so that only the ones for the requested calendar is returned!
         def photoEntries = PhotoEntry.findAllByTargetDateBetween(requestDate, (toDate.time+1))
         if (photoEntries) {
             render photoEntries as JSON

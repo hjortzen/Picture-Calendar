@@ -1,0 +1,57 @@
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="css/list_users.css" />
+
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+
+        <script type="text/javascript">
+            $(document).ready(function() {
+                var host = location.hostname + (location.port?":"+location.port:"");
+                var apiPath = "/REST/";
+                if ( host.indexOf('localhost') != -1 ) { //If local system the prepend the webapplication path
+                    apiPath = '/Picture-Calendar/REST/';
+                }
+                var BASE_URL = 'http://' + host + apiPath;
+                //Get all users
+                $.ajax({
+                    url: BASE_URL + 'users',
+                    dataType: 'json',
+                    success: function( result ) {
+                        window.kalle = result;
+                        for (var i=0; i<result.length; i++) {
+                            var user = result[i];
+                            var entry = $( '#template' ).clone();
+                            entry.attr('id', user.id);
+                            $( 'body' ).append(entry);
+                            entry.find( '.username' ).html(user.description);
+                            //Get the user calendars
+                             $.ajax({
+                                url: BASE_URL + 'users/' + user.id + '/calendars',
+                                dataType: 'json',
+                                success: function( calendars ) {
+                                    var calElement = entry.find( '.calendars' );
+                                    for (var i=0; i<calendars.length; i++) {
+                                        var cal = calendars[i];
+                                        var calLink = '<a href="index.gsp?calendarId=' + cal.id + '">' + cal.description + '</a>'
+                                        calElement.append(calLink);
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <h1>All of our users and their content</h1>
+        <p>The following users have calendars registered in this system</p>
+        
+        
+        <div id="template">
+            <span class="username"></span>
+            <div class="calendars"></div>
+        </div>
+    </body>
+
+</html>

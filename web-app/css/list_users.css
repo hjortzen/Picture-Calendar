@@ -1,0 +1,9 @@
+.username {
+    border-bottom: 1px solid #E3E3E3;
+    font-size: 1.5em;
+    width: 200px;
+    font-weight: bold;
+}
+#template {
+    display:none;
+}

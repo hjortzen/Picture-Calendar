@@ -19,4 +19,19 @@ class UserController {
     def login = {
         redirect(uri: "/index.gsp")
     }
+
+    def listActiveUsers = {
+        def activeUsers = new ArrayList<User>();
+        def calendars = Calendar.list();
+        for (cal in calendars) {
+            activeUsers.add(cal.user)
+        }
+        render activeUsers as JSON;
+    }
+
+    def listCalendarsForUser = {
+        def user = User.get(params.userId)
+        def calendars = Calendar.findAllByUser(user)
+        render calendars as JSON;
+    }
 }

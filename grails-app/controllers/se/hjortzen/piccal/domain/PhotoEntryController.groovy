@@ -86,6 +86,7 @@ class PhotoEntryController {
                         entry.createDate
                     }
                     generate {
+                        cache shared: true, neverExpires: true
                         response.contentLength = respContent.length
                         response.contentType = "image/jpeg"
                         response.setHeader('Accept-Ranges','bytes')
@@ -114,6 +115,7 @@ class PhotoEntryController {
                         entry.createDate
                     }
                     generate {
+                        cache shared: true, neverExpires: true
                         response.contentLength = respContent.length
                         response.contentType = "image/jpeg"
                         response.setHeader('Accept-Ranges','bytes')

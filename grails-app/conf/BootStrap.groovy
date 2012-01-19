@@ -20,6 +20,13 @@ class BootStrap {
 
             return returnArray
         }
+        JSON.registerObjectMarshaller(se.hjortzen.piccal.domain.User) {
+            def returnArray = [:]
+            returnArray['id'] = it.id
+            returnArray['description'] = it.description
+
+            return returnArray
+        }
     }
 
     def destroy = {

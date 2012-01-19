@@ -60,6 +60,16 @@ class UrlMappings {
                     GET: "login"
             ]
         }
+        "/REST/users"(controller: "user") {
+            action = [
+                    GET: "listActiveUsers"
+            ]
+        }
+        "/REST/users/$userId/calendars"(controller: "user") {
+            action = [
+                    GET: "listCalendarsForUser"
+            ]
+        }
         //END User
 		"/"(view:"/index")
 		"500"(view:'/error')

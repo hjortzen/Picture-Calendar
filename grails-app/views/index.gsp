@@ -22,7 +22,10 @@
                 }
                 var BASE_URL = 'http://' + host + apiPath;
                 var USER_LOGGED_IN = false;
-                var calendarId = 1;
+                var calendarId = getURLParameter('calendarId');
+                if (!calendarId || calendarId === "" || calendarId === "null") {
+                    calendarId = 1;
+                }
 
                 $('#calendar').fullCalendar({
                     theme: true,
@@ -224,6 +227,12 @@
                     if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
                 }
                 return null;
+            }
+
+            function getURLParameter(name) {
+                return decodeURI(
+                    (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
+                );
             }
         </script>
         <script type="text/javascript">
