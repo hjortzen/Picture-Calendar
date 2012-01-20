@@ -15,11 +15,6 @@ class CalendarController {
             render "Calendar not found"
             return;
         }
-        //TODO: Should we really check for ownership here? GET should always be available to public?
-        /*if (cal && cal.user.id != session.getAttribute("user").id) {
-            render "Not authorized"
-            return;
-        } */
         def pattern = "yyyy"
         def reqDateStr = params.year;
         if (params.month) {
@@ -41,10 +36,7 @@ class CalendarController {
         } else {
             toDate.set(java.util.Calendar.DAY_OF_YEAR, toDate.getActualMaximum(java.util.Calendar.DAY_OF_YEAR))
         }
-        //println("Requesting date: " + requestDate)
-        //println("To: " + toDate.time)
-        //TODO: Filter all the entries so that only the ones for the requested calendar is returned!
-        def photoEntries = PhotoEntry.findAllByTargetDateBetween(requestDate, (toDate.time+1))
+        def photoEntries = PhotoEntry.findAllByCalendarAndTargetDateBetween(cal, requestDate, (toDate.time+1))
         if (photoEntries) {
             render photoEntries as JSON
         } else {
@@ -74,14 +66,19 @@ class CalendarController {
     }
 
     def createCalendar = {
-        //TODO: Get this working
-        println "Params: " + request.JSON
-        def calendar = new Calendar(params.Calendar)
-        if (calendar.save()) {
-            response.status = 201
-            render calendar as JSON
+        def user = session.getAttribute("user")
+        if (!user) {
+            println('Tried to create calendar without being logged in');
+            render(status: 401, text: 'This action requires login');
+            return;
         }
-        //println calendar.errors;
+        def calendar = new Calendar()
+        calendar.user = user
+        calendar.description = params.name;
+        if (calendar.save()) {
+            redirect(uri: "/display_users.html")
+            return;
+        }
         response.status = 500;
         render "The parameters given were in incorrect format"
     }

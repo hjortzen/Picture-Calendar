@@ -32,7 +32,8 @@ class UrlMappings {
         "/REST/calendar/$id?"(controller: "calendar", parseRequest: true) {
             action = [
                 GET: "getCalendar",
-                PUT: "createCalendar"
+                PUT: "createCalendar",
+                POST: "createCalendar"
             ]
         }
 

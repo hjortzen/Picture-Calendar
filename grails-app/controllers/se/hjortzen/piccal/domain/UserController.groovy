@@ -24,7 +24,9 @@ class UserController {
         def activeUsers = new ArrayList<User>();
         def calendars = Calendar.list();
         for (cal in calendars) {
-            activeUsers.add(cal.user)
+            if (!activeUsers.contains(cal.user)) {
+                activeUsers.add(cal.user)
+            }
         }
         render activeUsers as JSON;
     }
