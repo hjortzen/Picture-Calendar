@@ -1,0 +1,78 @@
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="css/createcalendar.css" />
+
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+
+        <script type="text/javascript">
+            var host = location.hostname + (location.port?":"+location.port:"");
+            var apiPath = "/REST/";
+            if ( host.indexOf('localhost') != -1 ) { //If local system the prepend the webapplication path
+                apiPath = '/Picture-Calendar/REST/';
+            }
+            var BASE_URL = 'http://' + host + apiPath;
+
+            $(document).ready(function() {
+                //Get all users
+                $.ajax({
+                    url: BASE_URL + 'isLoggedIn',
+                    dataType: 'json',
+                    success: function( result ) {
+                        if (result.loggedIn === 'true') {
+                          userLoggedIn();
+                        } else {
+                          displayLogin();
+                        }
+                    },
+                    error: function(what) {
+                        alert('Error: ' + what);
+                    }
+                });
+
+                $( 'form' ).attr('action', BASE_URL + 'calendar');
+                
+                function displayLogin() {
+                    $( '#login a')
+                      .attr('href', BASE_URL + 'login');
+                    $( '#login' ).show();
+                    $( '#create' ).hide();
+                }
+                
+                function userLoggedIn() {
+                  $( '#login' ).hide();
+                  $( '#create' ).show();
+                }
+            });
+        </script>
+    </head>
+    <body>
+        <h1>Start a <em>New</em> Calendar</h1>
+        <p>Each user can create new calendars, most users would be satisfied 
+        with just the one calendar but for different projects it's suitable to
+        separate them into different calendars. 
+        <br>
+        For instance one calendar for scenery photos to-from work and 
+        another for the photos of my dog as a puppy and growing...
+        </p>
+        
+        <div id="login">
+          <a href="">Please login</a>
+        </div>
+        <div id="create">
+            <form action="" method="POST">
+                <fieldset>
+                    <legend>Create your new calendar</legend>
+                    <div id="inputFields">
+                        <label for="name">What do you wish to call it?</label>
+                        <input type="text" name="name" id="name" />
+                    </div>                    
+                    <div id="buttons">
+                        <input type="submit" value="Create calendar" />
+                        <input type="reset" value="Clear" />
+                    </div>
+                </fieldset>
+            </form>
+        </div>        
+    </body>
+
+</html>

@@ -1,0 +1,61 @@
+body {
+    width: 600;
+    margin-left: 20px;
+}
+
+h1 {
+    color: #755c44;
+    font-family: georgia,serif;
+    letter-spacing: 0.1em;
+}
+
+h1 em {
+    color:#8F7C47;
+    letter-spacing:0.05em
+}
+
+#login {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+form {
+  margin-left: auto;
+  margin-right: auto;
+  width: 350px;
+  overflow: auto;
+}
+
+fieldset {
+  border: 1px solid #dedede;
+  background: url("../images/cal.png") no-repeat scroll right -25px;
+}
+
+legend {
+  color: #0B77B7;
+  font-size: 1.2em;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+form label {
+  display: block;
+}
+
+#inputFields {
+  width: 190px;
+}
+
+form input[type="text"] {
+  width: 100%;
+  border: 1px solid #DDD;
+  background: #FAFAFA;
+  border-radius: 5px;
+  display: block;
+}
+
+#buttons {
+  float: right;
+  margin-top: 25px;
+  display: block;
+}

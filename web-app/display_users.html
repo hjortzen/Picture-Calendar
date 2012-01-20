@@ -17,7 +17,6 @@
                     url: BASE_URL + 'users',
                     dataType: 'json',
                     success: function( result ) {
-                        window.kalle = result;
                         for (var i=0; i<result.length; i++) {
                             var user = result[i];
                             var entry = $( '#template' ).clone();
