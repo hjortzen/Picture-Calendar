@@ -170,12 +170,14 @@
                                         }
                                     });
                                     window.jq = jqXHR;
+                                },
+                                success: function() {
+                                    $( '#newPhotoEntryForm' ).dialog( 'close' );
+                                    setTimeout(function() {
+                                        $( '#calendar' ).fullCalendar( 'refetchEvents' );
+                                    }, 800);
                                 }
                              });
-                            $( '#newPhotoEntryForm' ).dialog( 'close' );
-                            setTimeout(function() {
-                                $( '#calendar' ).fullCalendar( 'refetchEvents' );
-                            }, 800);
                         },
                         Cancel: function() {
                             $( this ).dialog( 'close' );

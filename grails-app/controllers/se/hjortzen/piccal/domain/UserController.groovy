@@ -13,11 +13,19 @@ class UserController {
 
     def logout = {
         session.invalidate()
-        redirect(uri: "/index.gsp")
+        def redirectUrl = params.redirect
+        if (!redirectUrl) {
+            redirectUrl = "/index.gsp"
+        }
+        redirect(uri: redirectUrl)
     }
 
     def login = {
-        redirect(uri: "/index.gsp")
+        def redirectUrl = params.redirect
+        if (!redirectUrl) {
+            redirectUrl = "/index.gsp"
+        }
+        redirect(uri: redirectUrl)
     }
 
     def listActiveUsers = {
