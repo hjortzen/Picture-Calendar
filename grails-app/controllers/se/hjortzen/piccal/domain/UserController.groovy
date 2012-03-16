@@ -15,7 +15,7 @@ class UserController {
         session.invalidate()
         def redirectUrl = params.redirect
         if (!redirectUrl) {
-            redirectUrl = "/index.gsp"
+            redirectUrl = "/"
         }
         redirect(uri: redirectUrl)
     }
@@ -23,7 +23,7 @@ class UserController {
     def login = {
         def redirectUrl = params.redirect
         if (!redirectUrl) {
-            redirectUrl = "/index.gsp"
+            redirectUrl = "/display_users.html"
         }
         redirect(uri: redirectUrl)
     }
