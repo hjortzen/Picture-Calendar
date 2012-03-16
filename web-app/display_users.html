@@ -31,7 +31,7 @@
                                     var calElement = entry.find( '.calendars' );
                                     for (var i=0; i<calendars.length; i++) {
                                         var cal = calendars[i];
-                                        var calLink = '<a href="index.gsp?calendarId=' + cal.id + '">' + cal.description + '</a>'
+                                        var calLink = '<a href="/?calendarId=' + cal.id + '">' + cal.description + '</a>'
                                         calElement.append(calLink);
                                     }
                                 }
