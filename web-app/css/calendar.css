@@ -19,8 +19,8 @@ p {
   padding-bottom: 5px;
 }
 .photoEntry img {
-  width: 90px;
-  height: auto;
+  width: auto;
+  height: 65px;
 }
 
 .originalURL {
