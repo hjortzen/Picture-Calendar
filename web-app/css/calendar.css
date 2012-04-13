@@ -57,6 +57,10 @@ p {
   color: #0B77B7;
 } 
 
+#newPhotoEntryForm p {
+  width: auto;
+}
+
 #newPhotoEntryForm label {
   float: left;
   text-align: right;
@@ -114,4 +118,9 @@ p {
 #login {
   float: right;
   font-size: 0.7em;
+}
+
+.ui-widget-overlay {
+    background: repeat-x scroll 50% 50% #444444;
+    opacity: 0.9;
 }
