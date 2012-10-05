@@ -54,7 +54,7 @@
                     var months = monthsBetween(start, end);
                     var events = [];
 
-                    for (var i=1; i<months.length-1; i++) { //TODO: Remove -1
+                    for (var i=0; i<months.length-1; i++) { //TODO: Remove -1
                         var ajaxUrl = BASE_URL + "calendar/" + calendarId + '/' + months[i].getFullYear() + "/" + (months[i].getMonth()+1);
                         //Perform AJAX call
                         function doIt() {
