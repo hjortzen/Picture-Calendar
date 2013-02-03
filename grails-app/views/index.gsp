@@ -49,6 +49,11 @@
                     eventAfterRender:  registerFancyBox,
                     dayClick: dayClicked
                 });
+                var december = new Date();
+                december.setFullYear(2012);
+                december.setMonth(11);
+                december.setDate(1);
+                $('#calendar').fullCalendar('gotoDate', december);
 
                 function fetchEvents(start, end, callback) {
                     var months = monthsBetween(start, end);
@@ -256,8 +261,10 @@
             <a href="">Login (undetected)</a>
         </div>
         <h1>104 photos - 2012</h1>
-        <p>The goal of this calendar is to publish two photos per week throughout the year of 2012.
-        One photo during the week and one from the weekend.
+        <p>During 2012 this project delivered two photos per week. The photos were take from all over the world. The goal of the project was to take more photos with an idea or thought, to process the photo (photoshop, lightroom etc) and to deliver it online.</p>
+        <p>Please navigate through the months of 2012 to see the photos</p>
+        <!--<p>The goal of this calendar is to publish two photos per week throughout the year of 2012.
+        One photo during the week and one from the weekend.-->
         <div id="calendar-content" >
             <span id="loading">Loading...</span>
             <div id="calendar" />
