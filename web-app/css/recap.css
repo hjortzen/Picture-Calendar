@@ -20,6 +20,8 @@ h1 {
     border-radius: 30px;
     margin-right: auto;
     margin-left: auto;
+    padding-bottom: 20px;
+    padding-left: 20px;
 }
 
 #images {
@@ -28,7 +30,6 @@ h1 {
 
 
 .image_item {
-    display: block;
     border: 1px solid #E3E3E3;
     margin-left: auto;
     margin-right: auto;
@@ -49,6 +50,4 @@ h1 {
     overflow: hidden;
     word-wrap: break-word;
     text-align: center;
-    /*display: block;*/
-    display: none;
 }

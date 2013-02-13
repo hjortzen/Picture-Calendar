@@ -1,0 +1,70 @@
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="css/recap.css" />
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+        <script type="text/javascript" src="js/handlebars.js"></script>
+
+        <script id="image-template" type="text/x-handlebars-template">
+		    <span id="{{image_id}}" class="image_wrapper">
+		    	<img src="{{image_url}}" title="{{image_title}}" class="image_item" data-largeURL="{{largeURL}}"/>
+		    	<span class="image_description">{{image_description}}</span>
+		    </span>
+		</script>
+
+
+        <script type="text/javascript">
+        	//TODO: If an image is clicked  maybe direct the user to the calender and the appropriate entry
+            $(document).ready(function() {
+            	var host = location.hostname + (location.port?":"+location.port:"");
+                var apiPath = "/REST/";
+                if ( host.indexOf('localhost') != -1 ) { //If local system the prepend the webapplication path
+                    apiPath = '/Picture-Calendar/REST/';
+                }
+                var BASE_URL = 'http://' + host + apiPath;
+
+				var ajaxUrl = BASE_URL + "calendar/" + getURLParameter('calendarId') + '/2012'; 
+				console.log('Looking for images from url ' + ajaxUrl);
+
+				$.ajax({
+                    url: ajaxUrl,
+                    dataType: 'json',
+                    success: function(result) {
+                    	var htmlTemplate = Handlebars.compile( $( '#image-template' ).html() );
+                        $.each(result, function( key, value) {
+                    		var entryURL = BASE_URL + 'entry/' + value.id;
+                    		var imgUrl =  entryURL + '/content';
+		                    var thumbnailUrl = entryURL + '/thumbnail';
+							var context = {
+								image_id: value.id,
+								image_url: imgUrl, 
+								image_title: value.description, 
+								image_description: value.description, 
+								largeURL: imgUrl
+							}
+                            $( '#images' ).append( htmlTemplate(context) );
+                        });
+                        $( '.image_item' ).on( 'click', function(ev, element) {
+                        	location.href = $( ev.target ).data( 'largeurl' );
+                        	ev.preventDefault;
+						});
+                    }
+                });
+            });
+
+			function getURLParameter(name) {
+                return decodeURI(
+                    (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
+                );
+            }
+        </script>
+    </head>
+
+    <body>
+    	<div id="content">
+	    	<h1>En titt tillbaka</h1>
+	    	<div id="images">
+	    	</div>
+	    </div>
+    </body>
+</html>
