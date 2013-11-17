@@ -60,10 +60,10 @@ cas {
 // set per-environment serverURL stem for creating absolute links
 environments {
     production {
-        grails.serverURL = "http://picture-calendar.cloudfoundry.com"
+        grails.serverURL = "http://calendar-hjortzen.rhcloud.com/picture-calendar/"
         cas.loginUrl = 'https://cas.user.uu.se/cas/login'
         cas.validateUrl = 'https://cas.user.uu.se/cas/serviceValidate'
-        cas.serverName = 'picture-calendar.cloudfoundry.com'
+        cas.serverName = 'calendar-hjortzen.rhcloud.com'        
     }
     development {
         grails.serverURL = "http://localhost:8080/${appName}"
@@ -85,9 +85,10 @@ log4j = {
     // Example of changing the log pattern for the default console
     // appender:
     //
-    //appenders {
-    //    console name:'stdout', layout:pattern(conversionPattern: '%c{2} %m%n')
-    //}
+    appenders {
+        //console name:'stdout', layout:pattern(conversionPattern: '%c{2} %m%n')
+        file name:'file', file:'calendar.log'
+    }
 
     error  'org.codehaus.groovy.grails.web.servlet',  //  controllers
            'org.codehaus.groovy.grails.web.pages', //  GSP
@@ -96,13 +97,13 @@ log4j = {
            'org.codehaus.groovy.grails.web.mapping', // URL mapping
            'org.codehaus.groovy.grails.commons', // core / classloading
            'org.codehaus.groovy.grails.plugins', // plugins
-           'org.codehaus.groovy.grails.orm.hibernate', // hibernate integration
            'org.springframework',
            'org.hibernate',
            'net.sf.ehcache.hibernate'
 
     warn   'org.mortbay.log'
+    info   'org.codehaus.groovy.grails.orm.hibernate' // hibernate integration
 }
 
 
-grails.plugin.cloudfoundry.appname = 'picture-calendar'
+//grails.plugin.cloudfoundry.appname = 'picture-calendar'

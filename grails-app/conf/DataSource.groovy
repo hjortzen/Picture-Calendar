@@ -30,9 +30,13 @@ environments {
         dataSource {
             dbCreate = "update"
             driverClassName = "com.mysql.jdbc.Driver"
-            url = "jdbc:mysql://localhost/grails"
-            username = "grails"
-            password = "groovy"
+            //String host = System.getenv('OPENSHIFT_MYSQL_DB_HOST')
+            //String port = System.getenv('OPENSHIFT_MYSQL_DB_PORT')
+            //String dbName = ???
+            //url = "jdbc:mysql://$OPENSHIFT_MYSQL_DB_HOST:$OPENSHIFT_MYSQL_DB_PORT/calendar"
+            url = "jdbc:mysql://127.8.35.130/calendar"
+            username = "adminB9fpyst"
+            password = "qN4yaa3sFlWS"
             dialect = "org.hibernate.dialect.MySQLInnoDBDialect"
         }
     }
